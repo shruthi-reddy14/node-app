@@ -30,7 +30,7 @@ app.get("/product", (req, res) => {
         { name: "Mobile" ,price:"35"}
     ];
 
-    res.json(product()); 
+    res.json(product); 
 });
 
 
