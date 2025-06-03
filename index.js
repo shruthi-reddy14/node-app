@@ -1,11 +1,38 @@
 import express from 'express'
 import cors from 'cors'
+import mongoose from 'mongoose'
+
+
 const app = express()  
 app.listen(8080,()=>{
+    mongoose.connect("mongodb://localhost:27017/gcet")
     console.log("server started");
 });
 
-app.use(cors())
+const userSchema = mongoose.Schema({
+    name:{type : String},email:{type:String},pass:{type:String}
+});
+
+const user = mongoose.model("User",userSchema);
+app.use(cors());
+app.use(express.json())
+app.get("/",async(req,res)=>{
+    return res.send("Good Morning");
+});
+
+app.post("/register",async(req,res)=>{ 
+    const {name,email,pass} =req.body
+    const result = await user.insertOne({name:name,email:email,pass:pass});
+    return res.json(result);
+});
+
+app.post("/login",async(req,res)=>{ 
+    const {email,pass} =req.body
+    const result = await user.findOne({email:email,pass:pass});
+    return res.json(result);
+    
+});
+
 
 app.get("/",(req,res)=>{
     return res.send("Hello World");
