@@ -12,8 +12,14 @@ app.listen(8080,()=>{
 const userSchema = mongoose.Schema({
     name:{type : String},email:{type:String},pass:{type:String}
 });
-
 const user = mongoose.model("User",userSchema);
+
+const productSchema = mongoose.Schema({
+    name:{type : String},price:{type:Number}
+});
+
+// const user = mongoose.model("User",userSchema);
+const product= mongoose.model("product",productSchema);
 app.use(cors());
 app.use(express.json())
 app.get("/",async(req,res)=>{
@@ -27,11 +33,19 @@ app.post("/register",async(req,res)=>{
 });
 
 app.post("/login",async(req,res)=>{ 
-    const {email,pass} =req.body
+    const {email,pass} =req.body;
     const result = await user.findOne({email:email,pass:pass});
-    return res.json(result);
-    
+    if(result){
+          return res.json("Accepted");
+    }
+    else{ return res.json("invalid");}
 });
+
+
+ app.get("/products",async(req,res)=>{ 
+  const products = await product.find();
+res.json(products);
+ });
 
 
 app.get("/",(req,res)=>{
@@ -50,14 +64,14 @@ app.get("/weather",(req,res)=>{
     return res.send("45degrees");
 });
 
-app.get("/product", (req, res) => {
-   const product = [
+// app.get("/product", (req, res) => {
+//    const product = [
     
-        { name: "Laptop",price:34000 },
-        { name: "Mobile" ,price:35000}
-    ];
+//         { name: "Laptop",price:34000 },
+//         { name: "Mobile" ,price:35000}
+//     ];
 
-    res.json(product); 
-});
+//     res.json(product); 
+// });
 
 
