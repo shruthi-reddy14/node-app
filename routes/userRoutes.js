@@ -22,10 +22,6 @@ userRouter.get("/:id/name", async (req, res) => {
   return res.json(result);
 });
 
-userRouter.get("/:id", async (req, res) => {
-  const email = req.params.id;
-  const result = await userModel.findOne({email,name,pass});
-  return res.json(result);
-});
+
 
 export default userRouter
