@@ -21,7 +21,7 @@ app.use("/users", userRouter);
 
 app.use("/products", productRouter);
 
-app.use("/order", orderRouter);
+app.use("/orders", orderRouter);
 
 mongoose
   .connect(MONGODB_URI)
