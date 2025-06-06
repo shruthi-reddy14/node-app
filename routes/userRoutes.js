@@ -1,7 +1,9 @@
    import express from "express";
    import userModel from "../models/userModel.js";
    import bcrypt from "bcryptjs";
-   const userRouter = express.Router()
+   const userRouter = express.Router();
+   import jwt from "jsonwebtoken";
+   const SECRET_KEY="shit";
 
 userRouter.post("/register", async (req, res) => {
   const { name, email, pass } = req.body;
@@ -12,9 +14,15 @@ userRouter.post("/register", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
   const { email, pass } = req.body;
-  const result = await userModel.findOne({ email, pass });
-  if (!result) return res.json({ message: "Invalid user or password" });
-  return res.json(result);
+  const result = await userModel.findOne({ email });
+  if (!result) return res.json({ message: "Invalid user" });
+  const matchpass = await bcrypt.compare(pass,result.pass);
+  if(!matchpass){
+    return res.status(400).json({message:"Invalid pass"});
+  }
+  const token = jwt.sign({email:result.email, id:result._id},SECRET_KEY);
+  console.log(result);
+  return res.json({user:result,token:token});
 });
 
 userRouter.get("/:id/name", async (req, res) => {
